@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Pendaftaran Mahasiswa Baru | Sistem Input Tanpa Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Poppins', 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e9f0fc 0%, #d9e3f0 100%);
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #1e3c72, #2b4a7a);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .header p {
+            color: #2c3e66;
+            font-weight: 500;
+            margin-top: 8px;
+            border-bottom: 2px solid #b0c4de;
+            display: inline-block;
+            padding-bottom: 6px;
+        }
+
+        /* card style */
+        .card {
+            background: rgba(255,255,255,0.94);
+            backdrop-filter: blur(2px);
+            border-radius: 36px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+            padding: 1.8rem 2rem;
+            margin-bottom: 2.5rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.3rem 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #1f3a64;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .input-group label i {
+            font-style: normal;
+            font-weight: 600;
+            background: #eef2ff;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+            font-size: 11px;
+        }
+
+        input, select {
+            padding: 10px 14px;
+            border: 1.5px solid #cad2e6;
+            border-radius: 22px;
+            font-size: 0.9rem;
+            background: white;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #2a6f8f;
+            box-shadow: 0 0 0 3px rgba(42,111,143,0.2);
+        }
+
+        .nilai-row {
+            background: #f8faff;
+            padding: 0.7rem 1rem;
+            border-radius: 28px;
+            margin-top: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: center;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        button {
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #eef2ff;
+            color: #1f3a64;
+        }
+
+        button.btn-primary {
+            background: #1f6392;
+            color: white;
+            box-shadow: 0 5px 12px rgba(31,99,146,0.3);
+        }
+
+        button.btn-primary:hover {
+            background: #0e4b72;
+            transform: translateY(-2px);
+        }
+
+        button.btn-danger {
+            background: #c2412c;
+            color: white;
+        }
+
+        button.btn-danger:hover {
+            background: #9b2c1a;
+        }
+
+        button.btn-warning {
+            background: #db9f2a;
+            color: #2c1e0e;
+        }
+
+        button.btn-warning:hover {
+            background: #bc851f;
+        }
+
+        /* tabel */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 28px;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            padding: 0.2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            min-width: 960px;
+        }
+
+        th {
+            background: #1f3a64;
+            color: white;
+            padding: 14px 8px;
+            font-weight: 600;
+            text-align: center;
+            border-right: 1px solid #2e5280;
+        }
+
+        td {
+            padding: 12px 6px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #ffffff;
+        }
+
+        tr:hover td {
+            background-color: #f5f9ff;
+        }
+
+        .badge-lulus {
+            background: #2b8c4e;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        .badge-cadangan {
+            background: #e67e22;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+
+        .badge-tidak {
+            background: #b91c1c;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+
+        .hapus-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #b91c1c;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 30px;
+        }
+
+        .hapus-btn:hover {
+            background: #ffe3e3;
+        }
+
+        .info-stats {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .total-badge {
+            background: #eef2fa;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #2c5282;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📋 SISTEM PENERIMAAN MAHASISWA BARU</h1>
+        <p>Input Data Tanpa Database • Nilai Tes + Kelulusan Otomatis</p>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="card">
+        <h3 style="margin-bottom: 1.2rem; display: flex; gap: 8px;">✍️ Formulir Pendaftaran</h3>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>🏢 Tempat Tes (Kode A/B/V)</label>
+                <select id="tempatTes">
+                    <option value="A">A - Gedung A</option>
+                    <option value="B">B - Gedung B</option>
+                    <option value="V">V - Viktor</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>🌊 Gelombang (1-9)</label>
+                <input type="number" id="gelombang" min="1" max="9" value="2" step="1">
+            </div>
+            <div class="input-group">
+                <label>📅 Bulan Tes (1-12)</label>
+                <input type="number" id="bulanTes" min="1" max="12" value="9" step="1">
+            </div>
+            <div class="input-group">
+                <label>🧑 Nama Lengkap</label>
+                <input type="text" id="nama" placeholder="Nama pendaftar" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>🎓 Jenis Kuliah</label>
+                <select id="jenisKuliah">
+                    <option value="S1 Reguler">S1 Reguler</option>
+                    <option value="S1 Eksekutif">S1 Eksekutif</option>
+                    <option value="D3">D3</option>
+                    <option value="Profesi">Profesi</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>📍 TTL (Tempat, Tgl Lahir)</label>
+                <input type="text" id="ttl" placeholder="Contoh: Jakarta, 15/08/2005">
+            </div>
+            <div class="input-group">
+                <label>📚 Asal Bidang / Sekolah</label>
+                <input type="text" id="asalBidang" placeholder="IPA / IPS / SMK Teknik">
+            </div>
+            <div class="input-group">
+                <label>👪 Pekerjaan Orang Tua</label>
+                <input type="text" id="pekerjaanOrtu" placeholder="PNS / Wiraswasta / dll">
+            </div>
+        </div>
+
+        <div style="margin: 0.8rem 0 0.5rem 0;">
+            <label style="font-weight: 700;">📊 NILAI TES (0 - 100)</label>
+        </div>
+        <div class="nilai-row">
+            <div class="input-group" style="flex:1">
+                <label>📐 Matematika</label>
+                <input type="number" id="nilaiMat" min="0" max="100" value="70" step="1">
+            </div>
+            <div class="input-group" style="flex:1">
+                <label>🇬🇧 Bahasa Inggris</label>
+                <input type="number" id="nilaiInggris" min="0" max="100" value="70" step="1">
+            </div>
+            <div class="input-group" style="flex:1">
+                <label>🧠 Pengetahuan Umum</label>
+                <input type="number" id="nilaiUmum" min="0" max="100" value="70" step="1">
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button id="btnSimpan" class="btn-primary">➕ TAMBAH PENDAFTAR</button>
+            <button id="btnResetForm" class="btn-warning">🗑️ Reset Form</button>
+            <button id="btnHapusSemua" class="btn-danger">⚠️ Hapus Semua Data</button>
+        </div>
+        <div class="info-stats">
+            <div class="total-badge" id="totalDataInfo">📦 Total Pendaftar: 0</div>
+            <div class="total-badge">💡 Keterangan: Rata-rata ≥70 ✅ Lulus | 60–69 ⏳ Cadangan | &lt;60 ❌ Tidak Lulus</div>
+        </div>
+    </div>
+
+    <!-- TABEL DATA -->
+    <div class="card" style="padding: 1rem 1.2rem;">
+        <h3 style="margin-bottom: 1rem;">📋 DAFTAR PENDAFTAR & HASIL TES</h3>
+        <div class="table-wrapper">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Kode Pendaftaran</th><th>Nama</th><th>TTL</th><th>Jenis Kuliah</th>
+                        <th>Asal Bidang</th><th>Pekerjaan Ortu</th><th>Matematika</th><th>B. Inggris</th>
+                        <th>Pengetahuan Umum</th><th>Rata-rata</th><th>Keterangan</th><th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="12" style="text-align:center;">Belum ada data, silakan tambah pendaftar.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer>
+        ⚡ Sistem pendaftaran tanpa database | Data tersimpan di localStorage browser Anda | Kode pendaftaran otomatis (format: [Tempat][Gelombang]-[NoUrut]-[Bulan])
+    </footer>
+</div>
+
+<script>
+    // ======================== DATA GLOBAL ========================
+    let dataPendaftar = [];       // menyimpan object pendaftar
+    const STORAGE_KEY = "pmb_data_pendaftar";
+
+    // DOM elements
+    const tempatTesEl = document.getElementById("tempatTes");
+    const gelombangEl = document.getElementById("gelombang");
+    const bulanTesEl = document.getElementById("bulanTes");
+    const namaEl = document.getElementById("nama");
+    const jenisKuliahEl = document.getElementById("jenisKuliah");
+    const ttlEl = document.getElementById("ttl");
+    const asalBidangEl = document.getElementById("asalBidang");
+    const pekerjaanOrtuEl = document.getElementById("pekerjaanOrtu");
+    const nilaiMatEl = document.getElementById("nilaiMat");
+    const nilaiInggrisEl = document.getElementById("nilaiInggris");
+    const nilaiUmumEl = document.getElementById("nilaiUmum");
+
+    const btnSimpan = document.getElementById("btnSimpan");
+    const btnResetForm = document.getElementById("btnResetForm");
+    const btnHapusSemua = document.getElementById("btnHapusSemua");
+    const tableBody = document.getElementById("tableBody");
+    const totalDataInfo = document.getElementById("totalDataInfo");
+
+    // ======================== FUNGSI BANTU ========================
+    function loadDataFromStorage() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            try {
+                dataPendaftar = JSON.parse(stored);
+            } catch(e) { dataPendaftar = []; }
+        } else {
+            dataPendaftar = [];
+        }
+        // pastikan setiap object memiliki properti yang diperlukan (jika ada data lama tanpa properti tertentu, tidak masalah)
+        renderTable();
+        updateTotalInfo();
+    }
+
+    function saveToStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dataPendaftar));
+        updateTotalInfo();
+    }
+
+    // generate nomor urut baru: berdasarkan panjang array + 1 (menghasilkan nomor unik berurutan)
+    // tetapi jika ada penghapusan, nomor baru tetap lanjut (tidak mengulang) => lebih aman.
+    function getNextNoUrut() {
+        return dataPendaftar.length + 1;
+    }
+
+    // Format kode pendaftaran : [Tempat][Gelombang]-[NoUrut]-[Bulan]
+    // Contoh: A2-1-9 , A2-101-9 dll
+    function generateKodePendaftaran(tempat, gelombang, bulan, noUrut) {
+        // tempat: string 'A','B','V' , gelombang: number, bulan: number, noUrut: integer
+        return `${tempat}${gelombang}-${noUrut}-${bulan}`;
+    }
+
+    // hitung rata2 dan keterangan (Lulus/Cadangan/Tidak Lulus)
+    function hitungRataDanKeterangan(nMat, nIng, nUmum) {
+        const rata = (nMat + nIng + nUmum) / 3;
+        let keterangan = "";
+        if (rata >= 70) keterangan = "LULUS";
+        else if (rata >= 60 && rata < 70) keterangan = "CADANGAN";
+        else keterangan = "TIDAK LULUS";
+        return { rata: rata.toFixed(2), keterangan };
+    }
+
+    // validasi input form
+    function isValidForm() {
+        const nama = namaEl.value.trim();
+        if (nama === "") {
+            alert("❌ Nama pendaftar harus diisi!");
+            return false;
+        }
+        const ttl = ttlEl.value.trim();
+        if (ttl === "") {
+            alert("❌ TTL (Tempat/Tanggal Lahir) harus diisi!");
+            return false;
+        }
+        const asal = asalBidangEl.value.trim();
+        if (asal === "") {
+            alert("❌ Asal Bidang harus diisi!");
+            return false;
+        }
+        const pekerjaan = pekerjaanOrtuEl.value.trim();
+        if (pekerjaan === "") {
+            alert("❌ Pekerjaan Orang Tua harus diisi!");
+            return false;
+        }
+        let mat = parseFloat(nilaiMatEl.value);
+        let ing = parseFloat(nilaiInggrisEl.value);
+        let umum = parseFloat(nilaiUmumEl.value);
+        if (isNaN(mat) || mat < 0 || mat > 100) {
+            alert("⚠️ Nilai Matematika harus angka 0-100!");
+            return false;
+        }
+        if (isNaN(ing) || ing < 0 || ing > 100) {
+            alert("⚠️ Nilai Bahasa Inggris harus angka 0-100!");
+            return false;
+        }
+        if (isNaN(umum) || umum < 0 || umum > 100) {
+            alert("⚠️ Nilai Pengetahuan Umum harus angka 0-100!");
+            return false;
+        }
+        let gel = parseInt(gelombangEl.value);
+        if (isNaN(gel) || gel < 1 || gel > 9) {
+            alert("Gelombang harus antara 1 - 9");
+            return false;
+        }
+        let bulan = parseInt(bulanTesEl.value);
+        if (isNaN(bulan) || bulan < 1 || bulan > 12) {
+            alert("Bulan tes harus antara 1 - 12");
+            return false;
+        }
+        return true;
+    }
+
+    // menambahkan pendaftar baru
+    function tambahPendaftar() {
+        if (!isValidForm()) return;
+
+        // baca semua data
+        const tempat = tempatTesEl.value;      // 'A','B','V'
+        const gelombang = parseInt(gelombangEl.value);
+        const bulan = parseInt(bulanTesEl.value);
+        const nama = namaEl.value.trim();
+        const jenisKuliah = jenisKuliahEl.value;
+        const ttl = ttlEl.value.trim();
+        const asalBidang = asalBidangEl.value.trim();
+        const pekerjaanOrtu = pekerjaanOrtuEl.value.trim();
+        const nilaiMat = parseFloat(nilaiMatEl.value);
+        const nilaiInggris = parseFloat(nilaiInggrisEl.value);
+        const nilaiUmum = parseFloat(nilaiUmumEl.value);
+        
+        const { rata, keterangan } = hitungRataDanKeterangan(nilaiMat, nilaiInggris, nilaiUmum);
+        const noUrutBaru = getNextNoUrut();   // berdasarkan jumlah data yang sudah ada + 1
+        const kodePendaftaran = generateKodePendaftaran(tempat, gelombang, bulan, noUrutBaru);
+        
+        const newPendaftar = {
+            id: Date.now() + Math.random() * 1000,   // id unik untuk keperluan hapus
+            kode: kodePendaftaran,
+            nama: nama,
+            ttl: ttl,
+            jenisKuliah: jenisKuliah,
+            asalBidang: asalBidang,
+            pekerjaanOrtu: pekerjaanOrtu,
+            nilaiMat: nilaiMat,
+            nilaiInggris: nilaiInggris,
+            nilaiUmum: nilaiUmum,
+            rataRata: parseFloat(rata),
+            keterangan: keterangan,
+            // tambahkan metadata tempat/gelombang/bulan (optional)
+        };
+        
+        dataPendaftar.push(newPendaftar);
+        saveToStorage();
+        renderTable();
+        resetForm(false);   // reset form tapi tidak reset placeholder yang penting, kosongkan beberapa kecuali pilihan default
+        updateTotalInfo();
+        alert(`✅ Pendaftar berhasil ditambahkan!\nKode: ${kodePendaftaran}\nRata-rata: ${rata} (${keterangan})`);
+    }
+
+    // hapus per data berdasarkan id
+    function hapusPendaftar(id) {
+        if (confirm("Yakin ingin menghapus data ini?")) {
+            dataPendaftar = dataPendaftar.filter(item => item.id != id);
+            saveToStorage();
+            renderTable();
+            updateTotalInfo();
+        }
+    }
+
+    // hapus semua data
+    function hapusSemuaData() {
+        if (dataPendaftar.length === 0) return alert("Tidak ada data untuk dihapus.");
+        if (confirm("⚠️ PERINGATAN: Semua data pendaftar akan dihapus secara permanen! Lanjutkan?")) {
+            dataPendaftar = [];
+            saveToStorage();
+            renderTable();
+            updateTotalInfo();
+            alert("Semua data telah dihapus.");
+        }
+    }
+
+    // reset form ke nilai default (tanpa mengosongkan beberapa field penting)
+    function resetForm(clearAll = true) {
+        if (clearAll) {
+            tempatTesEl.value = "A";
+            gelombangEl.value = "2";
+            bulanTesEl.value = "9";
+            namaEl.value = "";
+            jenisKuliahEl.value = "S1 Reguler";
+            ttlEl.value = "";
+            asalBidangEl.value = "";
+            pekerjaanOrtuEl.value = "";
+            nilaiMatEl.value = "70";
+            nilaiInggrisEl.value = "70";
+            nilaiUmumEl.value = "70";
+        } else {
+            // hanya kosongkan nama, ttl, asal, pekerjaan (biar cepat input berikutnya)
+            namaEl.value = "";
+            ttlEl.value = "";
+            asalBidangEl.value = "";
+            pekerjaanOrtuEl.value = "";
+            // nilai biarkan tetap terisi? kita set ke default 70 agar mudah
+            nilaiMatEl.value = "70";
+            nilaiInggrisEl.value = "70";
+            nilaiUmumEl.value = "70";
+            // tetapi tempat & gelombang & bulan tidak direset agar bisa melanjutkan
+        }
+    }
+
+    // render tabel dari dataPendaftar array
+    function renderTable() {
+        tableBody.innerHTML = "";
+        if (dataPendaftar.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center;">📭 Belum ada data, silakan tambah pendaftar baru.</td></tr>';
+            return;
+        }
+        
+        for (let i = 0; i < dataPendaftar.length; i++) {
+            const d = dataPendaftar[i];
+            const row = tableBody.insertRow();
+            
+            // Kode
+            row.insertCell(0).innerText = d.kode || "-";
+            row.insertCell(1).innerText = d.nama;
+            row.insertCell(2).innerText = d.ttl;
+            row.insertCell(3).innerText = d.jenisKuliah;
+            row.insertCell(4).innerText = d.asalBidang;
+            row.insertCell(5).innerText = d.pekerjaanOrtu;
+            row.insertCell(6).innerText = d.nilaiMat;
+            row.insertCell(7).innerText = d.nilaiInggris;
+            row.insertCell(8).innerText = d.nilaiUmum;
+            row.insertCell(9).innerText = d.rataRata;
+            
+            // Keterangan dengan badge style
+            const keteranganCell = row.insertCell(10);
+            let badgeClass = "";
+            let badgeText = d.keterangan;
+            if (d.keterangan === "LULUS") badgeClass = "badge-lulus";
+            else if (d.keterangan === "CADANGAN") badgeClass = "badge-cadangan";
+            else badgeClass = "badge-tidak";
+            keteranganCell.innerHTML = `<div class="${badgeClass}">${badgeText}</div>`;
+            
+            // Tombol hapus
+            const aksiCell = row.insertCell(11);
+            const btnHapus = document.createElement("button");
+            btnHapus.innerText = "🗑️ Hapus";
+            btnHapus.className = "hapus-btn";
+            btnHapus.style.background = "#f3e2e2";
+            btnHapus.style.padding = "5px 12px";
+            btnHapus.style.borderRadius = "30px";
+            btnHapus.style.fontSize = "0.7rem";
+            btnHapus.style.fontWeight = "bold";
+            btnHapus.style.cursor = "pointer";
+            btnHapus.onclick = (function(id) {
+                return function() { hapusPendaftar(id); };
+            })(d.id);
+            aksiCell.appendChild(btnHapus);
+        }
+    }
+    
+    function updateTotalInfo() {
+        const total = dataPendaftar.length;
+        totalDataInfo.innerText = `📦 Total Pendaftar: ${total}`;
+    }
+    
+    // ======================== EVENT LISTENER & INIT ========================
+    btnSimpan.addEventListener("click", tambahPendaftar);
+    btnResetForm.addEventListener("click", () => {
+        resetForm(true);
+    });
+    btnHapusSemua.addEventListener("click", hapusSemuaData);
+    
+    // tombol reset form juga bisa mengosongkan manual
+    // load data awal
+    loadDataFromStorage();
+    
+    // tambahan: validasi input nilai dengan event (opsional)
+    function enforceNumberRange(inputEl, min, max) {
+        inputEl.addEventListener("change", function() {
+            let val = parseFloat(this.value);
+            if (isNaN(val)) this.value = min;
+            else if (val < min) this.value = min;
+            else if (val > max) this.value = max;
+        });
+    }
+    enforceNumberRange(nilaiMatEl, 0, 100);
+    enforceNumberRange(nilaiInggrisEl, 0, 100);
+    enforceNumberRange(nilaiUmumEl, 0, 100);
+    enforceNumberRange(gelombangEl, 1, 9);
+    enforceNumberRange(bulanTesEl, 1, 12);
+    
+    // jika pengguna ingin langsung enter pada form
+    const formInputs = [namaEl, ttlEl, asalBidangEl, pekerjaanOrtuEl, nilaiMatEl, nilaiInggrisEl, nilaiUmumEl];
+    formInputs.forEach(inp => {
+        inp.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                tambahPendaftar();
+            }
+        });
+    });
+</script>
+</body>
+</html>
